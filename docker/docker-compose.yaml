@@ -1,0 +1,4 @@
+web:
+  image: gaas:latest
+  ports:
+   - "5000:5000"
