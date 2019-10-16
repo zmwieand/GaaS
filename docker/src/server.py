@@ -4,7 +4,9 @@ from flask import Flask
 from flask import request
 from flask import send_file
 from github import GitHub
+from github import GitHubFileDownloadException
 from graphviz import Graphviz
+from graphviz import GraphvizRenderException
 
 app = Flask(__name__)
 
@@ -24,11 +26,15 @@ def generate_image():
         # Generate Graphviz image from dot file
         png_file = Graphviz.generate_png(dot_file)
 
-    # TOOD: catch more meaningful exception and log
-    except Exception:
+    except GitHubFileDownloadException:
+        app.logger.error(f'Error downloading {filepath} from {repo}')
+        return send_file('static/404.png', mimetype='image/png')
+
+    except GraphvizRenderException:
+        app.logger.error(f'Error rendering {filepath} from {repo}')
         return send_file('static/404.png', mimetype='image/png')
 
     return send_file(png_file, mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0')

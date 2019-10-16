@@ -31,7 +31,7 @@ class GitHub():
 
         return dot_file
 
-class GitHubFileDownloadException():
+class GitHubFileDownloadException(Exception):
     """
     Exception thrown on a failed file download from GitHub.
     """
