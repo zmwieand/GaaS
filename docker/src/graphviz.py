@@ -13,9 +13,7 @@ class Graphviz():
         Raises an GraphvizRenderException if there is a problem rendering the
         png.
         """
-        # TODO: This should prob be a guid???
         png = dot_file.split('.')[0] + ".png"
-        # png = f"{png}.png"
         cmd = ["dot", "-Tpng", dot_file, "-o", png]
         proc = subprocess.Popen(cmd,
                 stdout=subprocess.PIPE,

@@ -2,3 +2,5 @@ web:
   image: gaas:latest
   ports:
    - "5000:5000"
+  environment:
+   - GIT_TOKEN={{REPLACE_ME}}
