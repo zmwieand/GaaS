@@ -1,5 +1,7 @@
+import os
 import subprocess
 
+from flask import after_this_request
 from flask import Flask
 from flask import request
 from flask import send_file
@@ -18,6 +20,8 @@ def health():
 def generate_image():
     repo = request.args.get('repository')
     filepath = request.args.get('filepath')
+    dot_file = ""
+    png_file = ""
 
     try:
         # Pull the file from GitHub
@@ -33,6 +37,13 @@ def generate_image():
     except GraphvizRenderException:
         app.logger.error(f'Error rendering {filepath} from {repo}')
         return send_file('static/404.png', mimetype='image/png')
+
+    # Remove the png file after the file is sent
+    @after_this_request
+    def remove_file(response):
+        os.remove(dot_file)
+        os.remove(png_file)
+        return response
 
     return send_file(png_file, mimetype='image/png')
 

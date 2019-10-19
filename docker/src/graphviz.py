@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 class Graphviz():
@@ -21,6 +22,7 @@ class Graphviz():
 
         returncode = proc.wait()
         if returncode != 0:
+            os.remove(dot_file)
             raise GraphvizRenderException()
 
         return png
