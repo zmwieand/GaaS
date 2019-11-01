@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gaas.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "gaas.name" . }}
+    helm.sh/chart: {{ include "gaas.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{.Values.service.SSLCertificate}}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 5000
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "gaas.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
